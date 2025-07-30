@@ -9,13 +9,7 @@ type Reservation = {
   created_at: string;
 };
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: { params: { id: string } }) {
   const { id: roomId } = params;
 
   const {
