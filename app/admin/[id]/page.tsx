@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { format } from 'date-fns';
 import { type FC } from 'react';
+import { type NextPage } from 'next'; // NextPage를 import 합니다.
 
 type Reservation = {
   id: number;
@@ -13,7 +14,14 @@ type Reservation = {
   created_at: string;
 };
 
-const AdminPage: FC<{ params: { id: string } }> = ({ params }) => {
+// 컴포넌트 props의 타입을 조정합니다.
+type AdminPageProps = {
+  params: {
+    id: string;
+  };
+};
+
+const AdminPage: NextPage<AdminPageProps> = ({ params }) => {
   const router = useRouter();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
