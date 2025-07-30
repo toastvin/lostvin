@@ -9,13 +9,13 @@ type Reservation = {
   created_at: string;
 };
 
-interface AdminPageProps {
+interface PageProps {
   params: {
     id: string;
   };
 }
 
-export default async function Page({ params }: AdminPageProps) {
+export default async function Page({ params }: PageProps) {
   const { id: roomId } = params;
 
   const {
@@ -26,7 +26,7 @@ export default async function Page({ params }: AdminPageProps) {
     redirect('/login');
   }
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('reservations')
     .select('*')
     .eq('room_id', roomId)
