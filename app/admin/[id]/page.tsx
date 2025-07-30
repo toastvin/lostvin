@@ -1,11 +1,6 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { format } from 'date-fns';
-import { type FC } from 'react';
-import { type NextPage } from 'next'; // NextPage를 import 합니다.
+import { redirect } from 'next/navigation';
 
 type Reservation = {
   id: number;
@@ -14,46 +9,30 @@ type Reservation = {
   created_at: string;
 };
 
-// 컴포넌트 props의 타입을 조정합니다.
-type AdminPageProps = {
+interface AdminPageProps {
   params: {
     id: string;
   };
-};
+}
 
-const AdminPage: NextPage<AdminPageProps> = ({ params }) => {
-  const router = useRouter();
-  const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [loading, setLoading] = useState(true);
+export default async function Page({ params }: AdminPageProps) {
+  const { id: roomId } = params;
 
-  const roomId = params.id;
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        router.push('/login');
-      }
-    });
+  if (!session) {
+    redirect('/login');
+  }
 
-    const fetchReservations = async () => {
-      const { data, error } = await supabase
-        .from('reservations')
-        .select('*')
-        .eq('room_id', roomId)
-        .order('date', { ascending: true });
+  const { data, error } = await supabase
+    .from('reservations')
+    .select('*')
+    .eq('room_id', roomId)
+    .order('date', { ascending: true });
 
-      if (error) {
-        console.error('Error:', error.message);
-      } else {
-        setReservations(data || []);
-      }
-      setLoading(false);
-    };
-
-    fetchReservations();
-  }, [roomId, router]);
-
-  if (loading) return <p>불러오는 중...</p>;
+  const reservations = data || [];
 
   return (
     <div className="p-6">
@@ -84,6 +63,4 @@ const AdminPage: NextPage<AdminPageProps> = ({ params }) => {
       )}
     </div>
   );
-};
-
-export default AdminPage;
+}
