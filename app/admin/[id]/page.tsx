@@ -12,7 +12,13 @@ type Reservation = {
   created_at: string;
 };
 
-export default function AdminPage({ params }: { params: { id: string } }) {
+interface AdminPageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function AdminPage({ params }: AdminPageProps) {
   const router = useRouter();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
