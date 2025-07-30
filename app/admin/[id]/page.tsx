@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { format } from 'date-fns';
+import { type FC } from 'react';
 
 type Reservation = {
   id: number;
@@ -18,7 +19,7 @@ interface AdminPageProps {
   };
 }
 
-export default function AdminPage({ params }: AdminPageProps) {
+const AdminPage: FC<AdminPageProps> = ({ params }) => {
   const router = useRouter();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,4 +82,6 @@ export default function AdminPage({ params }: AdminPageProps) {
       )}
     </div>
   );
-}
+};
+
+export default AdminPage;
