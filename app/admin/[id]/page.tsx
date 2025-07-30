@@ -1,6 +1,10 @@
-import { format } from 'date-fns';
+type AdminPageProps = {
+  params: {
+    id: string;
+  };
+};
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: AdminPageProps) {
   const { id: roomId } = params;
 
   return (
