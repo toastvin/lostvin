@@ -2,25 +2,30 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase'; // 사전에 설정한 Supabase 클라이언트
+import { supabase } from '@/lib/supabase';
 import { format } from 'date-fns';
+
+type Reservation = {
+  id: number;
+  name: string;
+  date: string;
+  created_at: string;
+};
 
 export default function AdminPage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const [reservations, setReservations] = useState<any[]>([]);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
 
   const roomId = params.id;
 
   useEffect(() => {
-    // ✅ 인증된 사용자 확인
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
         router.push('/login');
       }
     });
 
-    // ✅ 예약 데이터 로딩
     const fetchReservations = async () => {
       const { data, error } = await supabase
         .from('reservations')
@@ -60,7 +65,9 @@ export default function AdminPage({ params }: { params: { id: string } }) {
               <tr key={res.id}>
                 <td className="border px-4 py-2">{res.name}</td>
                 <td className="border px-4 py-2">{res.date}</td>
-                <td className="border px-4 py-2">{format(new Date(res.created_at), 'yyyy-MM-dd HH:mm')}</td>
+                <td className="border px-4 py-2">
+                  {format(new Date(res.created_at), 'yyyy-MM-dd HH:mm')}
+                </td>
               </tr>
             ))}
           </tbody>
