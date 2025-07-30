@@ -13,13 +13,7 @@ type Reservation = {
   created_at: string;
 };
 
-interface AdminPageProps {
-  params: {
-    id: string;
-  };
-}
-
-const AdminPage: FC<AdminPageProps> = ({ params }) => {
+const AdminPage: FC<{ params: { id: string } }> = ({ params }) => {
   const router = useRouter();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
